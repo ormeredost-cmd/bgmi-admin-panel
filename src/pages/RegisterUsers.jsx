@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// 🔥 Auto detect server URL (localhost or Render)
+// 🔥 USER SERVER (5001) - registeruser table
 const API_BASE =
   window.location.hostname === "localhost"
     ? "http://localhost:5001"
     : "https://main-server-firebase.onrender.com";
+
+// 🔥 DEPOSIT SERVER (5002) - DepositUser table  
+const DEPOSIT_API_BASE =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5002"
+    : "https://bgmi-server-save-tournament-data.onrender.com";
 
 const RegisterUsers = () => {
   const [users, setUsers] = useState([]);
@@ -13,13 +19,13 @@ const RegisterUsers = () => {
   const [error, setError] = useState("");
 
   /* ===============================
-     LOAD USERS FROM SERVER
+    LOAD USERS FROM SERVER (5001)
   =============================== */
   const loadUsers = async () => {
     try {
       setLoading(true);
       setError("");
-      console.log("🔍 Loading BGMI users from:", `${API_BASE}/api/admin/users`);
+      console.log("🔍 Loading BGMI users from 5001:", `${API_BASE}/api/admin/users`);
       const res = await axios.get(`${API_BASE}/api/admin/users`);
       console.log("🔍 API Response:", res.data);
 
@@ -56,7 +62,37 @@ const RegisterUsers = () => {
   };
 
   /* ===============================
-     DELETE USER
+    🔥 CLEAR APPROVED DEPOSITS (5002 SERVER - WALLET SAFE!)
+  =============================== */
+  const clearApprovedHistory = async (profileId) => {
+    // eslint-disable-next-line no-restricted-globals
+    if (!confirm(`Clear APPROVED deposits for ${profileId}?\n\n✅ Wallet balance SAME rahega!\n💰 Sirf DepositUser history saaf hogi`)) return;
+
+    try {
+      console.log("🧹 Clearing approved history for:", profileId);
+      console.log("📡 Calling DEPOSIT SERVER (5002):", `${DEPOSIT_API_BASE}/api/admin/clear-approved/${profileId}`);
+      
+      const res = await axios.delete(`${DEPOSIT_API_BASE}/api/admin/clear-approved/${profileId}`);
+      
+      console.log("✅ DEPOSIT SERVER RESPONSE:", res.data);
+      
+      if (res.data.success) {
+        // eslint-disable-next-line no-restricted-globals
+        alert(`✅ ${res.data.cleared || 0} approved deposits cleared!\n💰 Wallet balance safe!`);
+        loadUsers(); // Refresh user list
+      } else {
+        // eslint-disable-next-line no-restricted-globals
+        alert("❌ Server returned error response");
+      }
+    } catch (err) {
+      console.error("❌ Clear history error:", err.response?.status, err.response?.data || err.message);
+      // eslint-disable-next-line no-restricted-globals
+      alert(`❌ Failed to clear history\nStatus: ${err.response?.status || 'Unknown'}`);
+    }
+  };
+
+  /* ===============================
+    DELETE USER (5001 SERVER)
   =============================== */
   const handleDelete = async (id) => {
     // eslint-disable-next-line no-restricted-globals
@@ -220,6 +256,25 @@ const RegisterUsers = () => {
                   </small>
                 </td>
                 <td style={{ padding: "12px 8px", textAlign: "center" }}>
+                  {/* 🔥 NEW BUTTON - CLEAR APPROVED HISTORY (5002 SERVER) */}
+                  <button
+                    onClick={() => clearApprovedHistory(u.profileId)}
+                    style={{
+                      padding: "6px 10px",
+                      marginRight: "4px",
+                      background: "#FF5722",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                      fontSize: "11px",
+                      fontWeight: "500",
+                    }}
+                    title="Clear only APPROVED deposits from 5002 server (Wallet safe)"
+                  >
+                    🧹 Clear Approved
+                  </button>
+
                   <button
                     className="btn-secondary"
                     disabled
