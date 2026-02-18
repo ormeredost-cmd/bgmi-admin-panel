@@ -8,7 +8,7 @@ const API_URL =
 
 const TdmJoins = () => {
   const [joins, setJoins] = useState([]);
-  const [rooms, setRooms] = useState({}); // ✅ EMPTY ON LOAD
+  const [rooms, setRooms] = useState({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
@@ -17,31 +17,18 @@ const TdmJoins = () => {
     if (saving) return;
 
     try {
-      console.log("🔄 Fetching from:", API_URL);
       const res = await fetch(`${API_URL}/api/admin/joins`);
-      
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
-      }
-      
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
       const data = await res.json();
-      console.log("📥 Data received:", data.tournamentJoins);
-      
       setJoins(data.tournamentJoins || []);
 
-      // 🔥 FIXED: FORCE EMPTY ROOMS EVERY TIME (not just first load)
       const map = {};
-      data.tournamentJoins.forEach(j => {
-        map[j.tournament_id] = {
-          roomId: "",        // ✅ ALWAYS EMPTY
-          roomPassword: ""   // ✅ ALWAYS EMPTY
-        };
+      (data.tournamentJoins || []).forEach((j) => {
+        map[j.tournament_id] = { roomId: "", roomPassword: "" };
       });
-      
-      console.log("🏠 Rooms map FORCED EMPTY:", map);
-      setRooms(map); // ✅ OVERWRITE - no prev check
+      setRooms(map);
     } catch (error) {
-      console.error("❌ Fetch error:", error);
       setMessage("❌ Failed to load data");
     } finally {
       setLoading(false);
@@ -60,20 +47,16 @@ const TdmJoins = () => {
 
     try {
       const roomData = rooms[tournamentId];
+
       if (!roomData || (!roomData.roomId && !roomData.roomPassword)) {
         setMessage("❌ Enter Room ID or Password first");
         return;
       }
 
-      console.log("📤 Saving:", { tournamentId, ...roomData });
-      
       const res = await fetch(`${API_URL}/api/admin/set-room-by-tournament`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          tournamentId,
-          ...roomData
-        })
+        body: JSON.stringify({ tournamentId, ...roomData }),
       });
 
       if (!res.ok) {
@@ -82,14 +65,12 @@ const TdmJoins = () => {
       }
 
       const data = await res.json();
-      console.log("✅ Save success:", data);
       setMessage(`✅ ${data.message || "Room saved successfully"}`);
     } catch (error) {
-      console.error("❌ Save error:", error);
       setMessage(`❌ Save failed: ${error.message}`);
     } finally {
       setSaving(false);
-      fetchData(); // ✅ REFRESH - inputs will be EMPTY again
+      fetchData();
     }
   };
 
@@ -98,25 +79,20 @@ const TdmJoins = () => {
     setMessage("");
 
     try {
-      console.log("🧹 Clearing:", tournamentId);
-      
       const res = await fetch(`${API_URL}/api/admin/set-room-by-tournament`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tournamentId })
+        body: JSON.stringify({ tournamentId }),
       });
 
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
-      }
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       setMessage("🧹 Room cleared");
     } catch (error) {
-      console.error("❌ Clear error:", error);
       setMessage("❌ Clear failed");
     } finally {
       setSaving(false);
-      fetchData(); // ✅ REFRESH - inputs EMPTY
+      fetchData();
     }
   };
 
@@ -124,175 +100,170 @@ const TdmJoins = () => {
     setMessage("");
 
     try {
-      console.log("🗑️ Deleting:", id);
-      
       const res = await fetch(`${API_URL}/api/admin/tournament/${id}`, {
-        method: "DELETE"
+        method: "DELETE",
       });
 
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
-      }
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       setMessage("🗑️ User deleted");
       fetchData();
     } catch (error) {
-      console.error("❌ Delete error:", error);
       setMessage("❌ Delete failed");
     }
   };
 
-  if (loading) return <h2 style={{ padding: 30, textAlign: 'center' }}>Loading...</h2>;
+  if (loading)
+    return <h2 style={{ padding: 30, textAlign: "center" }}>Loading...</h2>;
 
   return (
     <div className="page">
       <h1>🏆 Tournament Joins (Admin)</h1>
 
-      {message && (
-        <div className="admin-message">
-          {message}
-        </div>
-      )}
+      {message && <div className="admin-message">{message}</div>}
 
-      <table className="data-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Profile Name</th>
-            <th>Profile ID</th>
-            <th>Tournament</th>
-            <th>Player Name</th>
-            <th>BGMI ID</th>
-            <th>Entry</th>
-            <th>Prize</th>
-            <th>Mode</th>
-            <th>Map</th>
-            <th>Room ID</th>
-            <th>Room Pass</th>
-            <th>Date</th>
-            <th>Save</th>
-            <th>Clear</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {joins.map((j, i) => (
-            <tr key={j.id}>
-              <td>{i + 1}</td>
-              <td>{j.profile_name || 'N/A'}</td>
-              <td>{j.profile_id || 'N/A'}</td>
-              <td>{j.tournament_name || 'N/A'}</td>
-              <td>{j.player_name || 'N/A'}</td>
-              <td>{j.bgmi_id || 'N/A'}</td>
-              <td>₹{j.entry_fee || 0}</td>
-              <td>₹{j.prize_pool || 0}</td>
-              <td>{j.mode || 'TDM'}</td>
-              <td>{j.map || 'Erangel'}</td>
-              
-              {/* ✅ Room ID - GUARANTEED EMPTY */}
-              <td>
-                <input
-                  value={rooms[j.tournament_id]?.roomId || ""}
-                  onChange={e =>
-                    setRooms(r => ({
-                      ...r,
-                      [j.tournament_id]: {
-                        ...r[j.tournament_id],
-                        roomId: e.target.value
-                      }
-                    }))
-                  }
-                  placeholder="Room ID"
-                  disabled={saving}
-                  style={{ padding: '4px 8px', minWidth: '90px', fontSize: '12px' }}
-                />
-              </td>
-
-              {/* ✅ Room Password - GUARANTEED EMPTY */}
-              <td>
-                <input
-                  type="password"
-                  value={rooms[j.tournament_id]?.roomPassword || ""}
-                  onChange={e =>
-                    setRooms(r => ({
-                      ...r,
-                      [j.tournament_id]: {
-                        ...r[j.tournament_id],
-                        roomPassword: e.target.value
-                      }
-                    }))
-                  }
-                  placeholder="Pass"
-                  disabled={saving}
-                  style={{ padding: '4px 8px', minWidth: '90px', fontSize: '12px' }}
-                />
-              </td>
-
-              <td>{j.joined_at ? new Date(j.joined_at).toLocaleString('en-IN') : 'N/A'}</td>
-              
-              <td>
-                <button 
-                  onClick={() => saveRoom(j.tournament_id)}
-                  disabled={saving}
-                  style={{ 
-                    padding: '4px 8px', margin: '1px', fontSize: '12px',
-                    background: '#4CAF50', color: 'white', border: 'none',
-                    borderRadius: '3px', cursor: saving ? 'not-allowed' : 'pointer'
-                  }}
-                >
-                  💾
-                </button>
-              </td>
-              
-              <td>
-                <button 
-                  onClick={() => clearRoom(j.tournament_id)}
-                  disabled={saving}
-                  style={{ 
-                    padding: '4px 8px', margin: '1px', fontSize: '12px',
-                    background: '#ff9800', color: 'white', border: 'none',
-                    borderRadius: '3px', cursor: saving ? 'not-allowed' : 'pointer'
-                  }}
-                >
-                  🧹
-                </button>
-              </td>
-              
-              <td>
-                <button 
-                  onClick={() => deleteUser(j.id)}
-                  disabled={saving}
-                  style={{ 
-                    padding: '4px 8px', margin: '1px', fontSize: '12px',
-                    background: '#f44336', color: 'white', border: 'none',
-                    borderRadius: '3px', cursor: saving ? 'not-allowed' : 'pointer'
-                  }}
-                >
-                  🗑️
-                </button>
-              </td>
-            </tr>
-          ))}
-
-          {joins.length === 0 && (
+      {/* ✅ MOST IMPORTANT WRAPPER */}
+      <div className="table-wrap">
+        <table className="data-table">
+          <thead>
             <tr>
-              <td colSpan="16" style={{ textAlign: "center", padding: '20px', color: '#666' }}>
-                📭 No tournament joins found
-              </td>
+              <th>#</th>
+              <th>Profile Name</th>
+              <th>Profile ID</th>
+              <th>Tournament</th>
+              <th>Player</th>
+              <th>BGMI ID</th>
+              <th>Entry</th>
+              <th>Prize</th>
+              <th>Mode</th>
+              <th>Map</th>
+              <th>Room ID</th>
+              <th>Room Pass</th>
+              <th>Date</th>
+              <th>Save</th>
+              <th>Clear</th>
+              <th>Delete</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
 
-      <div style={{ marginTop: '20px', fontSize: '12px', color: '#666' }}>
+          <tbody>
+            {joins.map((j, i) => (
+              <tr key={j.id}>
+                <td>{i + 1}</td>
+                <td>{j.profile_name || "N/A"}</td>
+                <td>{j.profile_id || "N/A"}</td>
+                <td>{j.tournament_name || "N/A"}</td>
+                <td>{j.player_name || "N/A"}</td>
+                <td>{j.bgmi_id || "N/A"}</td>
+                <td>₹{j.entry_fee || 0}</td>
+                <td>₹{j.prize_pool || 0}</td>
+                <td>{j.mode || "TDM"}</td>
+                <td>{j.map || "Erangel"}</td>
+
+                <td>
+                  <input
+                    className="room-input"
+                    value={rooms[j.tournament_id]?.roomId || ""}
+                    onChange={(e) =>
+                      setRooms((r) => ({
+                        ...r,
+                        [j.tournament_id]: {
+                          ...r[j.tournament_id],
+                          roomId: e.target.value,
+                        },
+                      }))
+                    }
+                    placeholder="Room ID"
+                    disabled={saving}
+                  />
+                </td>
+
+                <td>
+                  <input
+                    className="room-input"
+                    type="password"
+                    value={rooms[j.tournament_id]?.roomPassword || ""}
+                    onChange={(e) =>
+                      setRooms((r) => ({
+                        ...r,
+                        [j.tournament_id]: {
+                          ...r[j.tournament_id],
+                          roomPassword: e.target.value,
+                        },
+                      }))
+                    }
+                    placeholder="Pass"
+                    disabled={saving}
+                  />
+                </td>
+
+                <td>
+                  {j.joined_at
+                    ? new Date(j.joined_at).toLocaleString("en-IN")
+                    : "N/A"}
+                </td>
+
+                <td>
+                  <button
+                    className="save-btn"
+                    onClick={() => saveRoom(j.tournament_id)}
+                    disabled={saving}
+                    title="Save"
+                  >
+                    💾
+                  </button>
+                </td>
+
+                <td>
+                  <button
+                    className="clear-btn"
+                    onClick={() => clearRoom(j.tournament_id)}
+                    disabled={saving}
+                    title="Clear"
+                  >
+                    🧹
+                  </button>
+                </td>
+
+                <td>
+                  <button
+                    className="delete-btn"
+                    onClick={() => deleteUser(j.id)}
+                    disabled={saving}
+                    title="Delete"
+                  >
+                    🗑️
+                  </button>
+                </td>
+              </tr>
+            ))}
+
+            {joins.length === 0 && (
+              <tr>
+                <td className="no-data" colSpan="16">
+                  📭 No tournament joins found
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Debug (optional) */}
+      <div className="debug-box">
         <details>
           <summary>🔍 Debug Info</summary>
-          <pre>{JSON.stringify({ 
-            totalJoins: joins.length, 
-            roomsCount: Object.keys(rooms).length,
-            sampleData: joins[0] || 'No data'
-          }, null, 2)}</pre>
+          <pre>
+            {JSON.stringify(
+              {
+                totalJoins: joins.length,
+                roomsCount: Object.keys(rooms).length,
+                sampleData: joins[0] || "No data",
+              },
+              null,
+              2
+            )}
+          </pre>
         </details>
       </div>
     </div>

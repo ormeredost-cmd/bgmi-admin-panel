@@ -1,233 +1,395 @@
-/* TdmJoins.css - Compact Admin Panel (Small Font + Perfect Buttons) */
+/* TdmJoins.css - FINAL MOBILE PERFECT (Compact + Scrollable + Scroll Hint) */
+
+/* RESET */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* PAGE */
 .page {
-  padding: 15px;
-  max-width: 1400px;
+  width: 100%;
+  padding: 10px;
   margin: 0 auto;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
   min-height: 100vh;
   color: #e2e8f0;
 }
 
+/* TITLE */
 h1 {
   text-align: center;
   background: linear-gradient(135deg, #00d4ff 0%, #ff00ff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 20px;
-  font-size: 1.8rem;
-  font-weight: 700;
+  margin-bottom: 12px;
+  font-size: 1.15rem;
+  font-weight: 900;
 }
 
+/* MESSAGE */
 .admin-message {
   background: linear-gradient(135deg, #10b981, #059669);
   color: white;
-  padding: 12px 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin-bottom: 12px;
   text-align: center;
-  font-weight: 600;
-  font-size: 0.9rem;
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
-  animation: slideDown 0.4s ease;
+  font-weight: 800;
+  font-size: 0.82rem;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
 }
 
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* =========================
+   ✅ TABLE WRAP (MOST IMPORTANT)
+========================= */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto; /* 🔥 RIGHT-LEFT SCROLL */
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 12px;
+
+  position: relative; /* ✅ needed for hint line */
+  padding-bottom: 14px; /* ✅ space for scroll hint */
+
+  /* Smooth scroll */
+  scroll-behavior: smooth;
+
+  /* hide scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
+.table-wrap::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+/* ✅ SCROLL HINT LINE (BOTTOM) */
+.table-wrap::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 5px;
+  height: 3px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ✅ Moving shine effect (shows user can scroll) */
+.table-wrap::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  bottom: 5px;
+  height: 3px;
+  width: 50px;
+  border-radius: 10px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 212, 255, 0),
+    rgba(0, 212, 255, 0.95),
+    rgba(0, 212, 255, 0)
+  );
+  animation: scrollHint 1.6s infinite ease-in-out;
+}
+
+@keyframes scrollHint {
+  0% {
+    transform: translateX(0px);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateX(140px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 0.2;
+  }
+}
+
+/* TABLE */
 .data-table {
   width: 100%;
-  background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+
+  /* 🔥 IMPORTANT: kam width rakho so buttons easily aajaye */
+  min-width: 980px;
+
+  border-collapse: separate;
+  border-spacing: 0;
+  background: linear-gradient(145deg, #161616, #242424);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-  border: 1px solid #404040;
-  font-size: 0.8rem; /* 🔥 SMALL FONT */
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.7rem;
 }
 
+/* THEAD */
 .data-table thead {
   background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
-  color: #00d4ff;
-}
-
-.data-table th {
-  padding: 12px 8px; /* 🔥 COMPACT PADDING */
-  text-align: center;
-  font-weight: 700;
-  font-size: 0.75rem; /* 🔥 SMALLER FONT */
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  white-space: nowrap;
   color: #ffffff;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
 }
 
+/* Sticky header */
+.data-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+/* TH */
+.data-table th {
+  padding: 7px 5px;
+  text-align: center;
+  font-weight: 900;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.35px;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* TD */
 .data-table td {
-  padding: 10px 8px; /* 🔥 COMPACT PADDING */
-  border-bottom: 1px solid #404040;
+  padding: 6px 5px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   vertical-align: middle;
   text-align: center;
   color: #e2e8f0;
-  font-weight: 500;
-  font-size: 0.8rem; /* 🔥 SMALL FONT */
-}
-
-.data-table tbody tr {
-  transition: all 0.3s ease;
+  font-weight: 700;
+  font-size: 0.68rem;
+  white-space: nowrap;
 }
 
 .data-table tbody tr:hover {
-  background: linear-gradient(135deg, #2a2a3a, #3a3a4a);
-  transform: translateY(-1px);
-  box-shadow: 0 5px 20px rgba(0, 212, 255, 0.15);
+  background: rgba(0, 212, 255, 0.07);
 }
 
-.data-table tbody tr:last-child td {
-  border-bottom: none;
+/* =========================
+   STICKY LEFT 2 COLUMNS
+========================= */
+.data-table th:nth-child(1),
+.data-table td:nth-child(1) {
+  position: sticky;
+  left: 0;
+  z-index: 25;
+  background: linear-gradient(145deg, #111111, #1a1a1a);
+  min-width: 42px;
 }
 
-/* 🔥 PERFECT COLUMN WIDTHS (16 columns) */
-th:nth-child(1) { width: 4%; }   /* # */
-th:nth-child(2) { width: 9%; }   /* Profile Name */
-th:nth-child(3) { width: 9%; }   /* Profile ID */
-th:nth-child(4) { width: 10%; }  /* Tournament */
-th:nth-child(5) { width: 9%; }   /* Player Name */
-th:nth-child(6) { width: 9%; }   /* BGMI ID */
-th:nth-child(7) { width: 6%; }   /* Entry */
-th:nth-child(8) { width: 6%; }   /* Prize */
-th:nth-child(9) { width: 6%; }   /* Mode */
-th:nth-child(10){ width: 6%; }  /* Map */
-th:nth-child(11){ width: 8%; }  /* Room ID */
-th:nth-child(12){ width: 8%; }  /* Room Pass */
-th:nth-child(13){ width: 9%; }  /* Date */
-th:nth-child(14){ width: 5%; }  /* Save */
-th:nth-child(15){ width: 5%; }  /* Clear */
-th:nth-child(16){ width: 5%; }  /* Delete */
+.data-table th:nth-child(2),
+.data-table td:nth-child(2) {
+  position: sticky;
+  left: 42px;
+  z-index: 25;
+  background: linear-gradient(145deg, #111111, #1a1a1a);
+  min-width: 105px;
+}
 
-/* 🔥 COMPACT INPUTS */
-.data-table input {
+/* Column widths (compact) */
+.data-table th:nth-child(3),
+.data-table td:nth-child(3) {
+  min-width: 80px;
+}
+
+.data-table th:nth-child(4),
+.data-table td:nth-child(4) {
+  min-width: 120px;
+}
+
+.data-table th:nth-child(5),
+.data-table td:nth-child(5) {
+  min-width: 95px;
+}
+
+.data-table th:nth-child(6),
+.data-table td:nth-child(6) {
+  min-width: 85px;
+}
+
+.data-table th:nth-child(7),
+.data-table td:nth-child(7) {
+  min-width: 55px;
+}
+
+.data-table th:nth-child(8),
+.data-table td:nth-child(8) {
+  min-width: 60px;
+}
+
+.data-table th:nth-child(9),
+.data-table td:nth-child(9) {
+  min-width: 55px;
+}
+
+.data-table th:nth-child(10),
+.data-table td:nth-child(10) {
+  min-width: 55px;
+}
+
+.data-table th:nth-child(11),
+.data-table td:nth-child(11) {
+  min-width: 90px;
+}
+
+.data-table th:nth-child(12),
+.data-table td:nth-child(12) {
+  min-width: 90px;
+}
+
+.data-table th:nth-child(13),
+.data-table td:nth-child(13) {
+  min-width: 135px;
+}
+
+/* Buttons columns */
+.data-table th:nth-child(14),
+.data-table td:nth-child(14) {
+  min-width: 55px;
+}
+
+.data-table th:nth-child(15),
+.data-table td:nth-child(15) {
+  min-width: 55px;
+}
+
+.data-table th:nth-child(16),
+.data-table td:nth-child(16) {
+  min-width: 60px;
+}
+
+/* INPUT */
+.room-input {
   width: 100%;
-  padding: 6px 8px; /* 🔥 SMALLER */
-  border: 1px solid #404040;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  transition: all 0.3s ease;
-  background: linear-gradient(145deg, #2a2a2a, #3a3a3a);
+  min-width: 70px;
+  padding: 3px 5px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  font-size: 0.66rem;
+  background: rgba(255, 255, 255, 0.06);
   color: #e2e8f0;
   text-align: center;
-  height: 32px; /* 🔥 FIXED HEIGHT */
+  height: 24px;
 }
 
-.data-table input:focus {
+.room-input:focus {
   outline: none;
-  border-color: #00d4ff;
-  box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
-  background: linear-gradient(145deg, #3a3a3a, #4a4a5a);
+  border-color: rgba(0, 212, 255, 0.8);
+  box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.12);
 }
 
-/* 🔥 PERFECT VISIBLE BUTTONS */
+/* BUTTONS */
 .data-table button {
-  width: 36px;  /* 🔥 SMALLER + VISIBLE */
-  height: 36px;
+  width: 26px;
+  height: 26px;
   border: none;
-  border-radius: 6px;
+  border-radius: 7px;
   cursor: pointer;
-  font-size: 14px; /* 🔥 PERFECT SIZE */
+  font-size: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  font-weight: 700;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-  margin: 0;
+  font-weight: 900;
+  margin: 0 auto;
+  transition: 0.2s;
 }
 
 .save-btn {
   background: linear-gradient(135deg, #10b981, #059669);
   color: white;
-  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4);
-}
-
-.save-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #059669, #047857);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.6);
 }
 
 .clear-btn {
   background: linear-gradient(135deg, #f59e0b, #d97706);
   color: white;
-  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.4);
-}
-
-.clear-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #d97706, #b45309);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.6);
 }
 
 .delete-btn {
   background: linear-gradient(135deg, #ef4444, #dc2626);
   color: white;
-  box-shadow: 0 2px 10px rgba(239, 68, 68, 0.4);
 }
 
-.delete-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #dc2626, #b91c1c);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.6);
+.data-table button:hover {
+  transform: scale(1.08);
+  filter: brightness(1.1);
 }
 
 button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  transform: none !important;
+  transform: none;
 }
 
-/* Responsive */
-@media (max-width: 1200px) {
-  .page { padding: 12px; }
-  .data-table th, .data-table td { padding: 8px 6px; }
-}
-
-@media (max-width: 768px) {
-  h1 { font-size: 1.5rem; }
-  .data-table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-  .data-table th, .data-table td {
-    min-width: 70px;
-    padding: 8px 4px;
-    font-size: 0.75rem;
-  }
-  .data-table button {
-    width: 32px;
-    height: 32px;
-    font-size: 12px;
-  }
-  .data-table input {
-    padding: 4px 6px;
-    height: 28px;
-    font-size: 0.75rem;
-  }
-}
-
-/* Empty State */
-.data-table .no-data {
+/* NO DATA */
+.no-data {
   text-align: center;
-  color: #94a3b8;
-  font-style: italic;
-  padding: 40px;
-  font-size: 0.9rem;
+  padding: 20px;
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 700;
+}
+
+/* DEBUG */
+.debug-box {
+  margin-top: 14px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.debug-box pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 12px;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+/* EXTRA SMALL PHONE */
+@media (max-width: 420px) {
+  .page {
+    padding: 8px;
+  }
+
+  h1 {
+    font-size: 1.05rem;
+  }
+
+  .data-table {
+    min-width: 930px;
+  }
+
+  .data-table th {
+    font-size: 0.6rem;
+    padding: 6px 4px;
+  }
+
+  .data-table td {
+    font-size: 0.66rem;
+    padding: 6px 4px;
+  }
+
+  .room-input {
+    min-width: 65px;
+    height: 23px;
+    font-size: 0.64rem;
+  }
+
+  .data-table button {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
 }
