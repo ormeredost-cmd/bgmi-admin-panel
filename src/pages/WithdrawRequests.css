@@ -1,0 +1,169 @@
+/* ===============================
+   WITHDRAW REQUESTS PAGE
+================================ */
+.withdraw-admin {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 0 20px rgba(15, 23, 42, 0.7);
+}
+
+/* Title */
+.withdraw-admin h2 {
+  margin: 0 0 14px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* ===============================
+   FILTER BUTTONS
+================================ */
+.withdraw-filter {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.withdraw-filter button {
+  background: transparent;
+  border: 1px solid var(--border-soft);
+  color: var(--text-muted);
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: 999px;
+  transition: all 0.18s ease-out;
+}
+
+.withdraw-filter button:hover {
+  border-color: var(--accent-cyan);
+  color: var(--text-main);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.35);
+}
+
+.withdraw-filter button.active {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: var(--accent-green);
+  color: var(--accent-green);
+}
+
+/* ===============================
+   TABLE
+================================ */
+.withdraw-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.withdraw-table thead {
+  background: #020617;
+}
+
+.withdraw-table th,
+.withdraw-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-soft);
+  text-align: left;
+}
+
+.withdraw-table th {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.withdraw-table tbody tr:hover {
+  background: rgba(15, 23, 42, 0.8);
+}
+
+/* ===============================
+   STATUS BADGES
+================================ */
+.status {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status.pending {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+}
+
+.status.approved {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--accent-green);
+}
+
+.status.rejected {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger);
+}
+
+/* ===============================
+   ACTION BUTTONS
+================================ */
+.approve,
+.reject {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: all 0.18s ease-out;
+  margin-right: 6px;
+  cursor: pointer;
+}
+
+.approve {
+  color: var(--accent-green);
+  border-color: rgba(34, 197, 94, 0.6);
+}
+
+.approve:hover {
+  background: rgba(34, 197, 94, 0.12);
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+}
+
+.reject {
+  color: var(--danger);
+  border-color: rgba(239, 68, 68, 0.6);
+}
+
+.reject:hover {
+  background: rgba(239, 68, 68, 0.12);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+}
+
+.delete-btn {
+  color: var(--danger);
+  background: none;
+  border: 1px solid var(--danger);
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.18s ease-out;
+}
+
+.delete-btn:hover {
+  background: rgba(239, 68, 68, 0.12);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+}
+
+/* ===============================
+   MOBILE
+================================ */
+@media (max-width: 768px) {
+  .withdraw-admin {
+    padding: 14px;
+  }
+
+  .withdraw-filter {
+    justify-content: center;
+  }
+}

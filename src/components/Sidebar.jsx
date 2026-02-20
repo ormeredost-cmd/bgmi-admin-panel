@@ -1,3 +1,4 @@
+// src/components/Sidebar.jsx - PERFECT ✅
 import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
@@ -27,6 +28,15 @@ const Sidebar = () => {
 
         <NavLink to="/deposit-users" className="nav-item">
           💰 Deposit Users
+        </NavLink>
+
+        <NavLink to="/withdraw-requests" className="nav-item">
+          💸 Withdraw Requests
+        </NavLink>
+
+        {/* 🔥 ONLY 1 CLEAN BANK BUTTON */}
+        <NavLink to="/user-bank-details/akash123" className="nav-item">
+          🏦 Bank Details
         </NavLink>
 
         <NavLink to="/settings" className="nav-item">

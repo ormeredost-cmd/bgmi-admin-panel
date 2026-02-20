@@ -1,4 +1,4 @@
-// src/App.jsx
+// src/App.jsx - ROUTING 100% FIXED ✅
 import {
   BrowserRouter as Router,
   Routes,
@@ -16,8 +16,13 @@ import TdmJoins from "./pages/TdmJoins";
 import Settings from "./pages/Settings";
 import AdminLogin from "./pages/AdminLogin";
 
-// 🔥 NEW – Deposit Users Admin Page
+// 🔥 DEPOSIT USERS Admin Page
 import DepositUsers from "./pages/DepositUsers";
+// 🔥 WITHDRAW REQUESTS Admin Page
+import WithdrawRequests from "./pages/WithdrawRequests";
+
+// 🔥 USER BANK DETAILS PAGE - FIXED ROUTE WITH PARAM!
+import UserBankDetails from "./pages/UserBankDetails";
 
 import "./styles/theme.css";
 
@@ -42,6 +47,12 @@ const AdminLayout = () => (
 
           {/* 🔥 DEPOSIT USERS ROUTE */}
           <Route path="/deposit-users" element={<DepositUsers />} />
+          
+          {/* 🔥 WITHDRAW REQUESTS ROUTE */}
+          <Route path="/withdraw-requests" element={<WithdrawRequests />} />
+
+          {/* 🔥 USER BANK DETAILS ROUTE - FIXED WITH :userId PARAM! */}
+          <Route path="/user-bank-details/:userId" element={<UserBankDetails />} />
 
           <Route path="/settings" element={<Settings />} />
 
