@@ -1,4 +1,4 @@
-// src/pages/AdminLogin.jsx - FINAL FIXED CODE ✅
+// src/pages/AdminLogin.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -6,6 +6,7 @@ import "./AdminLogin.css";
 
 /* ===============================
    API BASE - AUTO DETECT ✅
+   Localhost / Render production
 ================================ */
 const API_URL =
   window.location.hostname === "localhost"
@@ -21,7 +22,7 @@ const AdminLogin = () => {
   const navigate = useNavigate();
 
   /* ===============================
-     LOGIN HANDLER - FIXED ✅
+     LOGIN HANDLER ✅
   ================================ */
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,16 +31,9 @@ const AdminLogin = () => {
 
     try {
       const res = await axios.post(
-        `${API_URL}/admin/login`, // ✅ API_URL FIXED (was API_BASE)
-        {
-          id: adminId.trim(),
-          password: password.trim(),
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        `${API_URL}/admin/login`,
+        { id: adminId.trim(), password: password.trim() },
+        { headers: { "Content-Type": "application/json" } }
       );
 
       if (res.data?.success) {
@@ -61,7 +55,7 @@ const AdminLogin = () => {
   };
 
   /* ===============================
-     UI - FIXED ✅
+     UI ✅
   ================================ */
   return (
     <div className="auth-page hacker-bg">
@@ -70,7 +64,7 @@ const AdminLogin = () => {
           <span className="auth-badge">ADMIN ACCESS</span>
           <h2 className="page-title">BGMI Admin Login</h2>
           <p className="page-subtitle">Authorized access only</p>
-          <small style={{ color: "#777" }}>API: {API_URL}</small> {/* ✅ API_URL */}
+          <small style={{ color: "#777" }}>API: {API_URL}</small>
         </div>
 
         {error && <div className="alert alert-error">{error}</div>}
@@ -85,6 +79,7 @@ const AdminLogin = () => {
               value={adminId}
               onChange={(e) => setAdminId(e.target.value)}
               required
+              autoComplete="username"
             />
           </label>
 
@@ -97,6 +92,7 @@ const AdminLogin = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              autoComplete="current-password"
             />
           </label>
 
