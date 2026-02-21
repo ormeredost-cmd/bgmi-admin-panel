@@ -10,7 +10,7 @@ import "./AdminLogin.css";
 const API_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:5000"
-    : "https://admin-server-gw8e.onrender.com";
+    : "https://admin-login-server.onrender.com";
 
 const AdminLogin = () => {
   const [adminId, setAdminId] = useState("");
