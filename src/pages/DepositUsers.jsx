@@ -4,7 +4,7 @@ import "./DepositUsers.css";
 const API =
   window.location.hostname === "localhost"
     ? "http://localhost:5002"
-    : "https://bgmi-server-save-tournament-data.onrender.com";
+    : "https://deposit-and-join-tournament-server.onrender.com";
 
 const DepositUsers = () => {
   const [deposits, setDeposits] = useState([]);

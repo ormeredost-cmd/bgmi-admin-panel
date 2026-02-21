@@ -6,7 +6,7 @@ import "./UserBankDetails.css";
 
 const ADMIN_API = window.location.hostname === "localhost" 
   ? "http://localhost:5003"
-  : "https://your-wallet-server.onrender.com";
+  : "https://withdraw-server.onrender.com";
 
 const AdminUserBankDetails = () => {
   const { userId } = useParams();

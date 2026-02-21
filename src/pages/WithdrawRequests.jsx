@@ -4,12 +4,12 @@ import "./WithdrawRequests.css";
 const API =
   window.location.hostname === "localhost"
     ? "http://localhost:5003"  // ✅ WALLET SERVER 5003 (Primary)
-    : "https://bgmi-server-save-tournament-data.onrender.com";
+    : "https://withdraw-server.onrender.com";
 
 const BACKUP_API =
   window.location.hostname === "localhost"
     ? "http://localhost:5002"  // ✅ Backup Server 5002  
-    : "https://bgmi-server-save-tournament-data.onrender.com";
+    : "https://deposit-and-join-tournament-server.onrender.com";
 
 const WithdrawRequests = () => {
   const [withdraws, setWithdraws] = useState([]);
