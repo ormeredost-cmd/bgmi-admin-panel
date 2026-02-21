@@ -1,3 +1,4 @@
+// src/pages/AdminLogin.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -28,6 +29,7 @@ const AdminLogin = () => {
     setLoading(true);
 
     try {
+      // Login API
       const res = await axios.post(
         `${API_URL}/admin/login`,
         { id: adminId.trim(), password: password.trim() },
@@ -35,35 +37,42 @@ const AdminLogin = () => {
       );
 
       if (res.data?.success) {
-        // Store token
+        // Store token & login status
         localStorage.setItem("bgmi_admin_logged_in", "true");
         localStorage.setItem("adminToken", res.data.token);
 
         // Optional: verify token immediately
         const verify = await axios.get(`${API_URL}/admin/verify`, {
-          headers: { Authorization: `Bearer ${res.data.token}` }
+          headers: { Authorization: `Bearer ${res.data.token}` },
         });
 
         if (verify.data?.success) {
           navigate("/", { replace: true });
           return;
         } else {
-          setError("Token verification failed");
+          setError("Token verification failed. Try login again.");
+          localStorage.removeItem("adminToken");
+          localStorage.removeItem("bgmi_admin_logged_in");
         }
       } else {
         setError("Invalid admin credentials");
       }
     } catch (err) {
-      console.error(err);
+      console.error("Login error:", err.response || err.message);
       setError(
         err.response?.data?.message ||
-        "Admin login failed. Check ID & Password."
+          "Admin login failed. Check ID & Password."
       );
+      localStorage.removeItem("adminToken");
+      localStorage.removeItem("bgmi_admin_logged_in");
     } finally {
       setLoading(false);
     }
   };
 
+  /* ===============================
+     UI
+  ================================ */
   return (
     <div className="auth-page hacker-bg">
       <div className="auth-card hacker-card">

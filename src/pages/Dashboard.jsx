@@ -9,10 +9,12 @@ import { roomsSample } from "../data/roomsSample";
 import { tdmSample } from "../data/tdmSample";
 
 /* ===============================
-   API BASE
+   API BASE - AUTO DETECT ✅
 ================================ */
 const API_BASE =
-  process.env.REACT_APP_API_URL || "http://localhost:5000";
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000"
+    : "https://admin-login-server.onrender.com"; // Render backend
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -39,7 +41,10 @@ const Dashboard = () => {
         });
         // ✅ verified → do nothing
       } catch (err) {
-        console.error("Admin verification failed");
+        console.error(
+          "Admin verification failed",
+          err.response?.data || err.message
+        );
         localStorage.removeItem("adminToken");
         localStorage.removeItem("bgmi_admin_logged_in");
         navigate("/admin-login", { replace: true });
@@ -47,7 +52,7 @@ const Dashboard = () => {
     };
 
     verifyAdmin();
-  }, [navigate, API_BASE]);
+  }, [navigate]); // ✅ dependency array me sirf navigate
 
   /* ===============================
      UI
