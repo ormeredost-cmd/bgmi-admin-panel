@@ -11,7 +11,7 @@ const API_BASE =
 const DEPOSIT_API_BASE =
   window.location.hostname === "localhost"
     ? "http://localhost:5002"
-    : "https://bgmi-server-save-tournament-data.onrender.com";
+    : "https://deposit-and-join-tournament-server.onrender.com";
 
 const RegisterUsers = () => {
   const [users, setUsers] = useState([]);
