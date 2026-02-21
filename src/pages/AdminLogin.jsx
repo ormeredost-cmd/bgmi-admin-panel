@@ -1,4 +1,3 @@
-// src/pages/AdminLogin.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -6,12 +5,11 @@ import "./AdminLogin.css";
 
 /* ===============================
    API BASE - AUTO DETECT ✅
-   Localhost / Render production
 ================================ */
 const API_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:5000"
-    : "https://admin-login-server.onrender.com";
+    : "https://admin-login-server.onrender.com"; // backend deployed URL
 
 const AdminLogin = () => {
   const [adminId, setAdminId] = useState("");
@@ -37,26 +35,35 @@ const AdminLogin = () => {
       );
 
       if (res.data?.success) {
+        // Store token
         localStorage.setItem("bgmi_admin_logged_in", "true");
         localStorage.setItem("adminToken", res.data.token);
-        navigate("/", { replace: true });
-        return;
-      }
 
-      setError("Invalid admin credentials");
+        // Optional: verify token immediately
+        const verify = await axios.get(`${API_URL}/admin/verify`, {
+          headers: { Authorization: `Bearer ${res.data.token}` }
+        });
+
+        if (verify.data?.success) {
+          navigate("/", { replace: true });
+          return;
+        } else {
+          setError("Token verification failed");
+        }
+      } else {
+        setError("Invalid admin credentials");
+      }
     } catch (err) {
+      console.error(err);
       setError(
         err.response?.data?.message ||
-          "Admin login failed. Check ID & Password."
+        "Admin login failed. Check ID & Password."
       );
     } finally {
       setLoading(false);
     }
   };
 
-  /* ===============================
-     UI ✅
-  ================================ */
   return (
     <div className="auth-page hacker-bg">
       <div className="auth-card hacker-card">
