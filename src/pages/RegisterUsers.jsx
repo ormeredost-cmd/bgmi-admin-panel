@@ -5,7 +5,7 @@ import axios from "axios";
 const API_BASE =
   window.location.hostname === "localhost"
     ? "http://localhost:5001"
-    : "https://main-server-firebase.onrender.com";
+    : "https://user-register-server.onrender.com";
 
 // 🔥 DEPOSIT SERVER (5002) - DepositUser table  
 const DEPOSIT_API_BASE =
