@@ -1,195 +1,110 @@
-// src/pages/UserBankDetails.jsx - 100% SUPABASE DATA ✅
+// src/pages/UserBankDetails.jsx - NO VERIFIED COLUMN ✅
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
 import "./UserBankDetails.css";
 
 const ADMIN_API = window.location.hostname === "localhost" 
-  ? "http://localhost:5003"
-  : "https://withdraw-server.onrender.com";
+  ? "http://localhost:5003" 
+  : "https://your-server.onrender.com";
 
-const AdminUserBankDetails = () => {
-  const { userId } = useParams();
-  const navigate = useNavigate();
-  
-  const [user, setUser] = useState(null);
-  const [bankDetailsList, setBankDetailsList] = useState([]);
+const UserBankDetails = () => {
+  const [banks, setBanks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+
+  const fetchAllBanks = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(`${ADMIN_API}/api/admin/all-banks`);
+      const bankList = data.banks || [];
+      
+      const enhancedBanks = bankList.map(bank => ({
+        ...bank,
+        displayUserId: bank.user_id || "N/A",
+        displayName: bank.profile_name || bank.account_holder || "Unknown",
+        displayTime: bank.created_at_ist ? 
+          new Date(bank.created_at_ist).toLocaleString("en-IN", { 
+            day: '2-digit', 
+            month: '2-digit', 
+            year: 'numeric',
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: true
+          }) : '-'
+      }));
+      
+      console.log("✅ IST TIME:", enhancedBanks[0]?.displayTime);
+      console.log("🔥 RAW DATA:", enhancedBanks[0]);
+      setBanks(enhancedBanks);
+    } catch (err) {
+      console.error("❌ ERROR:", err.response?.data || err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    console.log("🔍 User ID:", userId);
-    
-    if (!userId) {
-      setError("❌ No User ID!");
-      setLoading(false);
-      return;
-    }
-
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setError("");
-
-        // 🔥 DIRECT SUPABASE DATA - NO registeruser JOIN
-        console.log(`🔄 Fetching /api/admin/user-banks/${userId}`);
-        const res = await axios.get(`${ADMIN_API}/api/admin/user-banks/${userId}`, {
-          timeout: 10000
-        });
-
-        console.log("✅ DATA:", res.data);
-        
-        setUser({ username: userId, profile_id: userId });
-        setBankDetailsList(res.data.banks || []);
-
-      } catch (err) {
-        console.error("❌ API Error:", err.response?.data || err.message);
-        
-        // 🔥 FALLBACK - All banks filter
-        try {
-          const allRes = await axios.get(`${ADMIN_API}/api/admin/all-banks`);
-          const userBanks = allRes.data.banks.filter(bank => bank.user_id === userId);
-          
-          console.log("✅ FALLBACK banks:", userBanks.length);
-          setBankDetailsList(userBanks);
-          setUser({ username: userId, profile_id: userId });
-          
-        } catch (fallbackErr) {
-          setError("No bank data found");
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [userId]);
-
-  const handleVerify = async (userId) => {
-    try {
-      await axios.put(`${ADMIN_API}/api/admin/verify-bank/${userId}`);
-      setBankDetailsList(prev => 
-        prev.map(bank => bank.user_id === userId
-          ? { ...bank, is_verified: true, is_active: true, verified_by: "admin" }
-          : bank
-        )
-      );
-    } catch (err) {
-      setError("Verify failed");
-    }
-  };
-
-  const handleReject = async (userId) => {
-    try {
-      await axios.put(`${ADMIN_API}/api/admin/reject-bank/${userId}`);
-      setBankDetailsList(prev => 
-        prev.map(bank => bank.user_id === userId
-          ? { ...bank, is_verified: false, is_active: false, verified_by: null }
-          : bank
-        )
-      );
-    } catch (err) {
-      setError("Reject failed");
-    }
-  };
+    fetchAllBanks();
+  }, []);
 
   if (loading) {
     return (
-      <div style={{ padding: 40, textAlign: 'center' }}>
-        <div>🔄 Loading banks for {userId}...</div>
-        <div style={{ fontSize: 12, color: '#666' }}>
-          <a href="http://localhost:5003/health" target="_blank">Server Status</a>
-        </div>
+      <div className="page">
+        <div className="loading">🔄 Loading Bank Details...</div>
       </div>
     );
   }
 
   return (
-    <div className="admin-bank-container">
-      <div className="admin-header">
-        <button 
-          className="back-btn" 
-          onClick={() => navigate("/register-users")}
-          style={{ marginBottom: 20 }}
-        >
-          ← Back to Users
-        </button>
-        <h1>🏦 Bank Details - {userId}</h1>
-        <div>Accounts: <strong>{bankDetailsList.length}</strong></div>
+    <div className="page">
+      <h1>🏦 User Bank Details</h1>
+      <button onClick={fetchAllBanks} className="refresh-btn">🔄 Refresh</button>
+
+      <div className="table-wrap">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>User ID</th>
+              <th>Profile</th>
+              <th>Account Holder</th>
+              <th>Bank</th>
+              <th>Account No</th>
+              <th>IFSC</th>
+              <th>Time (IST)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {banks.length === 0 ? (
+              <tr>
+                <td colSpan="8" className="no-data">No Bank Details Found</td>
+              </tr>
+            ) : (
+              banks.map((bank, index) => (
+                <tr key={bank.id || bank.user_id || index}>
+                  <td>{bank.id}</td>
+                  <td><code className="user-id">{bank.displayUserId}</code></td>
+                  <td>{bank.displayName}</td>
+                  <td>{bank.account_holder}</td>
+                  <td><span className="bank-icon">{bank.bank_name}</span></td>
+                  <td><code className="account-no">{bank.account_number}</code></td>
+                  <td><code>{bank.ifsc_code}</code></td>
+                  <td><strong>{bank.displayTime}</strong></td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
 
-      {error && (
-        <div className="error-message" style={{ padding: 20, background: '#fee', border: '1px solid #fcc' }}>
-          ❌ {error}
-          <br/>
-          <small>Check: Server running? Data exists for {userId}?</small>
-        </div>
-      )}
-
-      {bankDetailsList.length === 0 ? (
-        <div className="no-data" style={{ padding: 40, textAlign: 'center', color: '#666' }}>
-          📭 No bank details found for <code>{userId}</code>
-          <br/>
-          <small>User must add bank details first</small>
-        </div>
-      ) : (
-        <div className="bank-table-container">
-          <table className="bank-details-table">
-            <thead>
-              <tr>
-                <th>Bank Name</th>
-                <th>Account Holder</th>
-                <th>Account No.</th>
-                <th>UPI ID</th>
-                <th>IFSC</th>
-                <th>Status</th>
-                <th>Created</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {bankDetailsList.map((bank, index) => (
-                <tr key={bank.id || index}>
-                  <td>{bank.bank_name || '-'}</td>
-                  <td>{bank.account_holder || '-'}</td>
-                  <td>{bank.account_number ? `****${bank.account_number.slice(-4)}` : '-'}</td>
-                  <td>{bank.upi_id || '-'}</td>
-                  <td style={{ fontFamily: 'monospace' }}>{bank.ifsc || '-'}</td>
-                  <td>
-                    <span className={`status-badge ${bank.is_verified ? 'verified' : 'pending'}`}>
-                      {bank.is_verified ? '✅ Verified' : '⏳ Pending'}
-                    </span>
-                  </td>
-                  <td>{bank.created_at ? new Date(bank.created_at).toLocaleString('en-IN') : '-'}</td>
-                  <td>
-                    {!bank.is_verified ? (
-                      <>
-                        <button 
-                          className="verify-btn"
-                          onClick={() => handleVerify(bank.user_id)}
-                          style={{ marginRight: 8 }}
-                        >
-                          ✅ Verify
-                        </button>
-                        <button 
-                          className="reject-btn"
-                          onClick={() => handleReject(bank.user_id)}
-                        >
-                          ❌ Reject
-                        </button>
-                      </>
-                    ) : (
-                      <span style={{ color: 'green' }}>✓ Verified</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* DEBUG INFO */}
+      {banks.length > 0 && (
+        <div className="debug-box">
+          <strong>Sample:</strong> {banks[0].displayUserId} | 
+          <strong>IST Time:</strong> {banks[0].displayTime}
         </div>
       )}
     </div>
   );
 };
 
-export default AdminUserBankDetails;
+export default UserBankDetails;
