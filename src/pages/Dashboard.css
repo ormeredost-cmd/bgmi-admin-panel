@@ -1,0 +1,178 @@
+/* ================= GLOBAL ================= */
+.dashboard {
+  padding: 20px;
+  background: linear-gradient(135deg, #020617, #0b1120);
+  min-height: 100vh;
+  color: #e5e7eb;
+  font-family: "Inter", sans-serif;
+}
+
+/* ================= HEADER ================= */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.dashboard-header h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.dashboard-header span {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+/* ================= STATS GRID ================= */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 18px;
+  margin-bottom: 25px;
+}
+
+/* ================= CARD (CardStat ko support karega) ================= */
+.stat-card {
+  background: rgba(17, 24, 39, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 18px;
+  transition: 0.3s ease;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+.stat-card h4 {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.stat-card p {
+  font-size: 22px;
+  font-weight: bold;
+  margin-top: 6px;
+  color: #ffffff;
+}
+
+/* ================= PANELS ================= */
+.panel {
+  background: rgba(17, 24, 39, 0.85);
+  backdrop-filter: blur(12px);
+  padding: 18px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: 0.3s;
+}
+
+.panel:hover {
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+.panel h2 {
+  margin-bottom: 12px;
+  font-size: 18px;
+  color: #f9fafb;
+}
+
+/* ================= ROW ================= */
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 5px;
+  border-bottom: 1px solid #1f2937;
+  transition: 0.2s;
+}
+
+.row:hover {
+  background: rgba(255,255,255,0.03);
+}
+
+.row span:first-child {
+  color: #d1d5db;
+}
+
+.row span:last-child {
+  font-weight: 600;
+  color: #22c55e;
+}
+
+/* ================= GRID 2 ================= */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+/* ================= LOADING ================= */
+.loading {
+  text-align: center;
+  margin-top: 120px;
+  font-size: 20px;
+  color: #9ca3af;
+}
+
+/* ================= SCROLL ================= */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 10px;
+}
+
+/* ================= MOBILE RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 12px;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card p {
+    font-size: 18px;
+  }
+}
+
+/* ================= EXTRA GLOW EFFECT ================= */
+.stat-card:nth-child(1) {
+  border-left: 3px solid #22c55e;
+}
+.stat-card:nth-child(2) {
+  border-left: 3px solid #3b82f6;
+}
+.stat-card:nth-child(3) {
+  border-left: 3px solid #f97316;
+}
+.stat-card:nth-child(4) {
+  border-left: 3px solid #a855f7;
+}
+.stat-card:nth-child(5) {
+  border-left: 3px solid #10b981;
+}
+.stat-card:nth-child(6) {
+  border-left: 3px solid #06b6d4;
+}
+.stat-card:nth-child(7) {
+  border-left: 3px solid #ec4899;
+}

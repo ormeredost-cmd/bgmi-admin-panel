@@ -1,4 +1,5 @@
 // src/App.jsx - ROUTING 100% FIXED ✅
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -24,6 +25,9 @@ import WithdrawRequests from "./pages/WithdrawRequests";
 // 🔥 USER BANK DETAILS PAGE - FIXED ROUTE WITH PARAM!
 import UserBankDetails from "./pages/UserBankDetails";
 
+// 🔥 ADMIN TOURNAMENT DETAIL PAGE (TUMHARA tournamentDetail admin version)
+import AdminTournamentDetail from "./pages/AdminTournamentDetail";
+
 import "./styles/theme.css";
 
 // ===== helper: admin login check =====
@@ -47,12 +51,15 @@ const AdminLayout = () => (
 
           {/* 🔥 DEPOSIT USERS ROUTE */}
           <Route path="/deposit-users" element={<DepositUsers />} />
-          
+
           {/* 🔥 WITHDRAW REQUESTS ROUTE */}
           <Route path="/withdraw-requests" element={<WithdrawRequests />} />
 
           {/* 🔥 USER BANK DETAILS ROUTE - FIXED WITH :userId PARAM! */}
           <Route path="/user-bank-details/:userId" element={<UserBankDetails />} />
+
+          {/* 🔥 ADMIN TOURNAMENT DETAIL (tm1, tm2, tm3 etc.) */}
+          <Route path="/tournament/:id" element={<AdminTournamentDetail />} />
 
           <Route path="/settings" element={<Settings />} />
 
