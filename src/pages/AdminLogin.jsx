@@ -78,7 +78,7 @@ const AdminLogin = () => {
       <div className="auth-card hacker-card">
         <div className="auth-header">
           <span className="auth-badge">ADMIN ACCESS</span>
-          <h2 className="page-title">BGMI Admin Login</h2>
+          <h2 className="page-title">Free Fire Admin Login</h2>
           <p className="page-subtitle">Authorized access only</p>
           <small style={{ color: "#777" }}>API: {API_URL}</small>
         </div>
@@ -91,7 +91,7 @@ const AdminLogin = () => {
             <input
               type="text"
               className="form-input hacker-input"
-              placeholder="bgmiadmin"
+              
               value={adminId}
               onChange={(e) => setAdminId(e.target.value)}
               required
@@ -104,7 +104,7 @@ const AdminLogin = () => {
             <input
               type="password"
               className="form-input hacker-input"
-              placeholder="supersecret123"
+              
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
