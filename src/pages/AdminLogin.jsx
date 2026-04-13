@@ -5,12 +5,12 @@ import axios from "axios";
 import "./AdminLogin.css";
 
 /* ===============================
-   API BASE - AUTO DETECT ✅
+   API BASE - AUTO DETECT
 ================================ */
 const API_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:5000"
-    : "https://admin-login-server.onrender.com"; // backend deployed URL
+    : "https://admin-login-server.onrender.com";
 
 const AdminLogin = () => {
   const [adminId, setAdminId] = useState("");
@@ -21,7 +21,7 @@ const AdminLogin = () => {
   const navigate = useNavigate();
 
   /* ===============================
-     LOGIN HANDLER ✅
+     LOGIN HANDLER
   ================================ */
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,7 +29,6 @@ const AdminLogin = () => {
     setLoading(true);
 
     try {
-      // Login API
       const res = await axios.post(
         `${API_URL}/admin/login`,
         { id: adminId.trim(), password: password.trim() },
@@ -37,11 +36,9 @@ const AdminLogin = () => {
       );
 
       if (res.data?.success) {
-        // Store token & login status
         localStorage.setItem("bgmi_admin_logged_in", "true");
         localStorage.setItem("adminToken", res.data.token);
 
-        // Optional: verify token immediately
         const verify = await axios.get(`${API_URL}/admin/verify`, {
           headers: { Authorization: `Bearer ${res.data.token}` },
         });
@@ -70,60 +67,65 @@ const AdminLogin = () => {
     }
   };
 
-  /* ===============================
-     UI
-  ================================ */
   return (
     <div className="auth-page hacker-bg">
-      <div className="auth-card hacker-card">
-        <div className="auth-header">
-          <span className="auth-badge">ADMIN ACCESS</span>
-          <h2 className="page-title">Free Fire Admin Login</h2>
-          <p className="page-subtitle">Authorized access only</p>
-          <small style={{ color: "#777" }}>API: {API_URL}</small>
+      <div className="auth-shell">
+        <div className="auth-card hacker-card">
+          <div className="auth-header">
+            <span className="auth-badge">ADMIN ACCESS</span>
+            <h2 className="page-title">Free Fire Admin Login</h2>
+            <p className="page-subtitle">Authorized access only</p>
+            <small className="api-text">API: {API_URL}</small>
+          </div>
+
+          {error && (
+            <div className="alert alert-error" role="alert">
+              {error}
+            </div>
+          )}
+
+          <form className="auth-form" onSubmit={handleSubmit}>
+            <label className="form-label" htmlFor="adminId">
+              <span>Admin ID</span>
+              <input
+                id="adminId"
+                type="text"
+                className="form-input hacker-input"
+                placeholder="Enter admin ID"
+                value={adminId}
+                onChange={(e) => setAdminId(e.target.value)}
+                required
+                autoComplete="username"
+              />
+            </label>
+
+            <label className="form-label" htmlFor="password">
+              <span>Password</span>
+              <input
+                id="password"
+                type="password"
+                className="form-input hacker-input"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="current-password"
+              />
+            </label>
+
+            <button
+              type="submit"
+              className="btn-primary hacker-btn"
+              disabled={loading}
+            >
+              {loading ? "Verifying..." : "Login"}
+            </button>
+
+            <p className="auth-footer-text">
+              Unauthorized access is prohibited 🚫
+            </p>
+          </form>
         </div>
-
-        {error && <div className="alert alert-error">{error}</div>}
-
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <label className="form-label">
-            <span>Admin ID</span>
-            <input
-              type="text"
-              className="form-input hacker-input"
-              
-              value={adminId}
-              onChange={(e) => setAdminId(e.target.value)}
-              required
-              autoComplete="username"
-            />
-          </label>
-
-          <label className="form-label">
-            <span>Password</span>
-            <input
-              type="password"
-              className="form-input hacker-input"
-              
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete="current-password"
-            />
-          </label>
-
-          <button
-            type="submit"
-            className="btn-primary hacker-btn"
-            disabled={loading}
-          >
-            {loading ? "Verifying..." : "Login"}
-          </button>
-
-          <p className="auth-footer-text">
-            Unauthorized access is prohibited 🚫
-          </p>
-        </form>
       </div>
     </div>
   );
