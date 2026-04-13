@@ -23,7 +23,7 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink to="/tdm-joins" className="nav-item">
-          ⚔️ 1v1 TDM Joins
+          ⚔️ Free Fire Tournament
         </NavLink>
 
         <NavLink to="/deposit-users" className="nav-item">

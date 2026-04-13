@@ -14,18 +14,22 @@ const TdmJoins = () => {
   const [message, setMessage] = useState("");
 
   const fetchData = useCallback(async () => {
-    if (saving) return;
-
     try {
+      setLoading(true);
       const res = await fetch(`${API_URL}/api/admin/joins`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       const data = await res.json();
-      setJoins(data.tournamentJoins || []);
+      const joinsData = data.tournamentJoins || [];
+
+      setJoins(joinsData);
 
       const map = {};
-      (data.tournamentJoins || []).forEach((j) => {
-        map[j.tournament_id] = { roomId: "", roomPassword: "" };
+      joinsData.forEach((j) => {
+        map[j.tournament_id] = {
+          roomId: j.room_id || "",
+          roomPassword: j.room_password || "",
+        };
       });
       setRooms(map);
     } catch (error) {
@@ -33,12 +37,10 @@ const TdmJoins = () => {
     } finally {
       setLoading(false);
     }
-  }, [saving]);
+  }, []);
 
   useEffect(() => {
     fetchData();
-    const i = setInterval(fetchData, 10000);
-    return () => clearInterval(i);
   }, [fetchData]);
 
   const saveRoom = async (tournamentId) => {
@@ -66,11 +68,11 @@ const TdmJoins = () => {
 
       const data = await res.json();
       setMessage(`✅ ${data.message || "Room saved successfully"}`);
+      await fetchData();
     } catch (error) {
       setMessage(`❌ Save failed: ${error.message}`);
     } finally {
       setSaving(false);
-      fetchData();
     }
   };
 
@@ -82,21 +84,26 @@ const TdmJoins = () => {
       const res = await fetch(`${API_URL}/api/admin/set-room-by-tournament`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tournamentId }),
+        body: JSON.stringify({
+          tournamentId,
+          roomId: "",
+          roomPassword: "",
+        }),
       });
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       setMessage("🧹 Room cleared");
+      await fetchData();
     } catch (error) {
-      setMessage("❌ Clear failed");
+      setMessage(`❌ Clear failed: ${error.message}`);
     } finally {
       setSaving(false);
-      fetchData();
     }
   };
 
   const deleteUser = async (id) => {
+    setSaving(true);
     setMessage("");
 
     try {
@@ -107,14 +114,17 @@ const TdmJoins = () => {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       setMessage("🗑️ User deleted");
-      fetchData();
+      await fetchData();
     } catch (error) {
-      setMessage("❌ Delete failed");
+      setMessage(`❌ Delete failed: ${error.message}`);
+    } finally {
+      setSaving(false);
     }
   };
 
-  if (loading)
+  if (loading) {
     return <h2 style={{ padding: 30, textAlign: "center" }}>Loading...</h2>;
+  }
 
   return (
     <div className="page">
@@ -122,7 +132,6 @@ const TdmJoins = () => {
 
       {message && <div className="admin-message">{message}</div>}
 
-      {/* ✅ MOST IMPORTANT WRAPPER */}
       <div className="table-wrap">
         <table className="data-table">
           <thead>
@@ -130,15 +139,16 @@ const TdmJoins = () => {
               <th>#</th>
               <th>Profile Name</th>
               <th>Profile ID</th>
+              <th>Tournament ID</th>
               <th>Tournament</th>
-              <th>Player</th>
-              <th>BGMI ID</th>
+              <th>Free Name</th>
+              <th>Free Fire ID</th>
               <th>Entry</th>
               <th>Prize</th>
               <th>Mode</th>
               <th>Map</th>
-              <th>Room ID</th>
-              <th>Room Pass</th>
+              <th>Custom ID</th>
+              <th>Custom Pass</th>
               <th>Date</th>
               <th>Save</th>
               <th>Clear</th>
@@ -152,6 +162,7 @@ const TdmJoins = () => {
                 <td>{i + 1}</td>
                 <td>{j.profile_name || "N/A"}</td>
                 <td>{j.profile_id || "N/A"}</td>
+                <td>{j.tournament_id || "N/A"}</td>
                 <td>{j.tournament_name || "N/A"}</td>
                 <td>{j.player_name || "N/A"}</td>
                 <td>{j.bgmi_id || "N/A"}</td>
@@ -165,10 +176,10 @@ const TdmJoins = () => {
                     className="room-input"
                     value={rooms[j.tournament_id]?.roomId || ""}
                     onChange={(e) =>
-                      setRooms((r) => ({
-                        ...r,
+                      setRooms((prev) => ({
+                        ...prev,
                         [j.tournament_id]: {
-                          ...r[j.tournament_id],
+                          ...prev[j.tournament_id],
                           roomId: e.target.value,
                         },
                       }))
@@ -184,10 +195,10 @@ const TdmJoins = () => {
                     type="password"
                     value={rooms[j.tournament_id]?.roomPassword || ""}
                     onChange={(e) =>
-                      setRooms((r) => ({
-                        ...r,
+                      setRooms((prev) => ({
+                        ...prev,
                         [j.tournament_id]: {
-                          ...r[j.tournament_id],
+                          ...prev[j.tournament_id],
                           roomPassword: e.target.value,
                         },
                       }))
@@ -240,7 +251,7 @@ const TdmJoins = () => {
 
             {joins.length === 0 && (
               <tr>
-                <td className="no-data" colSpan="16">
+                <td className="no-data" colSpan="17">
                   📭 No tournament joins found
                 </td>
               </tr>
@@ -249,7 +260,6 @@ const TdmJoins = () => {
         </table>
       </div>
 
-      {/* Debug (optional) */}
       <div className="debug-box">
         <details>
           <summary>🔍 Debug Info</summary>
