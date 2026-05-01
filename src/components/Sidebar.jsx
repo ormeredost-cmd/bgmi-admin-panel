@@ -5,8 +5,8 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="sidebar-logo">
-        <span className="logo-main">BGMI</span>
-        <span className="logo-sub">Hacker Admin</span>
+        <span className="logo-main">FREE FIRE</span>
+        
       </div>
 
       <nav className="sidebar-nav">

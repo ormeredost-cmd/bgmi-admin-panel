@@ -16,8 +16,8 @@ const Topbar = () => {
   return (
     <div className="topbar">
       <div className="topbar-left">
-        <h1 className="topbar-title">BGMI Esports Control Room</h1>
-        <span className="topbar-subtitle">Admin Panel • Hacker Mode</span>
+        <h1 className="topbar-title">Free Fire Esports Control Room</h1>
+        
       </div>
       <div className="topbar-right">
         <span className="topbar-time">{now}</span>

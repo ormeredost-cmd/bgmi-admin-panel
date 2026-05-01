@@ -115,7 +115,7 @@ const RegisterUsers = () => {
   return (
     <div className="page">
       <div className="page-header">
-        <h2 className="page-title">👥 BGMI Esports – Registered Players</h2>
+        <h2 className="page-title">👥 FREE FIRE – Registered Players</h2>
         <p className="page-subtitle">Admin View - {users.length} Players Total</p>
         <button
           onClick={loadUsers}
@@ -160,7 +160,7 @@ const RegisterUsers = () => {
             textAlign: "center",
           }}
         >
-          ⏳ Loading registered BGMI players...
+          ⏳ Loading registered FREE FIRE players...
         </div>
       )}
 
@@ -322,7 +322,7 @@ const RegisterUsers = () => {
                   }}
                 >
                   <div>
-                    👥 No BGMI players registered yet
+                    👥 No FREE FIRE players registered yet
                     <br />
                     <small style={{ fontSize: "14px" }}>
                       Players will appear here after registration from frontend
