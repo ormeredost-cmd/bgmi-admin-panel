@@ -1,12 +1,11 @@
-// src/components/Sidebar.jsx - PERFECT ✅
+
 import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="sidebar-logo">
-        <span className="logo-main">FREE FIRE</span>
-        
+        <span className="logo-main">E-SPORTS</span>
       </div>
 
       <nav className="sidebar-nav">
@@ -18,12 +17,27 @@ const Sidebar = () => {
           👤 Register Users
         </NavLink>
 
+        {/* TOURNAMENT MANAGEMENT */}
+        <NavLink to="/tournament-management" className="nav-item">
+          🏆 Tournament Management
+        </NavLink>
+
+        {/* TOURNAMENT RESULTS */}
+        <NavLink to="/tournament-results" className="nav-item">
+          🏅 Tournament Results
+        </NavLink>
+
+        {/* LIVE CHAT SUPPORT */}
+        <NavLink to="/support" className="nav-item">
+          💬 Live Chat Support
+        </NavLink>
+
         <NavLink to="/rooms" className="nav-item">
-          🎮 1v1 Room ID & Password
+          🎮 Share Room ID & Password
         </NavLink>
 
         <NavLink to="/tdm-joins" className="nav-item">
-          ⚔️ Free Fire Tournament
+          ⚔️ BGMI TOURNAMENT
         </NavLink>
 
         <NavLink to="/deposit-users" className="nav-item">
@@ -34,8 +48,10 @@ const Sidebar = () => {
           💸 Withdraw Requests
         </NavLink>
 
-        {/* 🔥 ONLY 1 CLEAN BANK BUTTON */}
-        <NavLink to="/user-bank-details/akash123" className="nav-item">
+        <NavLink
+          to="/user-bank-details/akash123"
+          className="nav-item"
+        >
           🏦 Bank Details
         </NavLink>
 

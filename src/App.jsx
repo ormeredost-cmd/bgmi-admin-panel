@@ -1,4 +1,4 @@
-// src/App.jsx - ROUTING 100% FIXED ✅
+// src/App.jsx - TOURNAMENT MANAGEMENT + RESULTS + LIVE SUPPORT ROUTES
 
 import {
   BrowserRouter as Router,
@@ -17,24 +17,28 @@ import TdmJoins from "./pages/TdmJoins";
 import Settings from "./pages/Settings";
 import AdminLogin from "./pages/AdminLogin";
 
-// 🔥 DEPOSIT USERS Admin Page
 import DepositUsers from "./pages/DepositUsers";
-// 🔥 WITHDRAW REQUESTS Admin Page
 import WithdrawRequests from "./pages/WithdrawRequests";
-
-// 🔥 USER BANK DETAILS PAGE - FIXED ROUTE WITH PARAM!
 import UserBankDetails from "./pages/UserBankDetails";
 
-// 🔥 ADMIN TOURNAMENT DETAIL PAGE (TUMHARA tournamentDetail admin version)
 import AdminTournamentDetail from "./pages/AdminTournamentDetail";
+
+// Tournament Management
+import TournamentManagement from "./pages/TournamentManagement";
+
+// Tournament Results / Winning
+import TournamentResults from "./pages/TournamentResults";
+
+// Live Chat Support
+import AdminSupport from "./pages/AdminSupport";
 
 import "./styles/theme.css";
 
-// ===== helper: admin login check =====
+// ===== ADMIN LOGIN CHECK =====
 const isAdminLoggedIn = () =>
   localStorage.getItem("bgmi_admin_logged_in") === "true";
 
-// ===== layout for all admin pages =====
+// ===== LAYOUT FOR ALL ADMIN PAGES =====
 const AdminLayout = () => (
   <div className="app-root">
     <Sidebar />
@@ -45,50 +49,100 @@ const AdminLayout = () => (
       <div className="app-content">
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/register-users" element={<RegisterUsers />} />
-          <Route path="/rooms" element={<RoomManagement />} />
-          <Route path="/tdm-joins" element={<TdmJoins />} />
 
-          {/* 🔥 DEPOSIT USERS ROUTE */}
-          <Route path="/deposit-users" element={<DepositUsers />} />
+          <Route
+            path="/register-users"
+            element={<RegisterUsers />}
+          />
 
-          {/* 🔥 WITHDRAW REQUESTS ROUTE */}
-          <Route path="/withdraw-requests" element={<WithdrawRequests />} />
+          <Route
+            path="/tournament-management"
+            element={<TournamentManagement />}
+          />
 
-          {/* 🔥 USER BANK DETAILS ROUTE - FIXED WITH :userId PARAM! */}
-          <Route path="/user-bank-details/:userId" element={<UserBankDetails />} />
+          {/* TOURNAMENT RESULTS / WINNING */}
+          <Route
+            path="/tournament-results"
+            element={<TournamentResults />}
+          />
 
-          {/* 🔥 ADMIN TOURNAMENT DETAIL (tm1, tm2, tm3 etc.) */}
-          <Route path="/tournament/:id" element={<AdminTournamentDetail />} />
+          {/* LIVE CHAT SUPPORT */}
+          <Route
+            path="/support"
+            element={<AdminSupport />}
+          />
 
-          <Route path="/settings" element={<Settings />} />
+          <Route
+            path="/rooms"
+            element={<RoomManagement />}
+          />
 
-          {/* unknown route → dashboard */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route
+            path="/tdm-joins"
+            element={<TdmJoins />}
+          />
+
+          <Route
+            path="/deposit-users"
+            element={<DepositUsers />}
+          />
+
+          <Route
+            path="/withdraw-requests"
+            element={<WithdrawRequests />}
+          />
+
+          <Route
+            path="/user-bank-details/:userId"
+            element={<UserBankDetails />}
+          />
+
+          <Route
+            path="/tournament/:id"
+            element={<AdminTournamentDetail />}
+          />
+
+          <Route
+            path="/settings"
+            element={<Settings />}
+          />
+
+          {/* UNKNOWN ROUTE → DASHBOARD */}
+          <Route
+            path="*"
+            element={<Navigate to="/" replace />}
+          />
         </Routes>
       </div>
     </div>
   </div>
 );
 
-// ===== protected wrapper =====
+// ===== PROTECTED ADMIN APP =====
 const ProtectedApp = () => {
   if (!isAdminLoggedIn()) {
     return <Navigate to="/admin-login" replace />;
   }
+
   return <AdminLayout />;
 };
 
-// ===== main app =====
+// ===== MAIN APP =====
 function App() {
   return (
     <Router>
       <Routes>
-        {/* admin login (no sidebar/topbar) */}
-        <Route path="/admin-login" element={<AdminLogin />} />
+        {/* ADMIN LOGIN */}
+        <Route
+          path="/admin-login"
+          element={<AdminLogin />}
+        />
 
-        {/* all admin pages */}
-        <Route path="/*" element={<ProtectedApp />} />
+        {/* ALL PROTECTED ADMIN PAGES */}
+        <Route
+          path="/*"
+          element={<ProtectedApp />}
+        />
       </Routes>
     </Router>
   );

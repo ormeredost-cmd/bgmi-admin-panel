@@ -16,7 +16,7 @@ const Topbar = () => {
   return (
     <div className="topbar">
       <div className="topbar-left">
-        <h1 className="topbar-title">Free Fire Esports Control Room</h1>
+        <h1 className="topbar-title">BGMI Esports Control Room</h1>
         
       </div>
       <div className="topbar-right">
